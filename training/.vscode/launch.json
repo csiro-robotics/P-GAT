@@ -1,0 +1,24 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+    
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            //"args": ["--config_file", "/home/wan325/Documents/projects/gnn_slam/configs/visual_config.yml"]
+            //"args": ["--config_file", "/home/wan325/Documents/projects/gnn_slam/configs/test_config.yml"]
+            //"args": ["--config_file", "/home/wan325/Documents/projects/gnn_slam/configs/training_config.yml"]
+            //"args": ["--config_file", "/home/wan325/Documents/projects/gnn_slam/configs/pair_gen_config.yml"]
+            //"args": ["--config_file", "/home/wan325/Documents/projects/gnn_slam/configs/data_generator_config.yml"]
+            //"args": ["--config_file", "/home/wan325/Documents/projects/gnn_slam/configs/plot_config.yml"]
+            "args": ["--config_file", "/home/wan325/Documents/projects/gnn_slam/configs/hard_mining_config.yml"]
+        }
+    ]
+}

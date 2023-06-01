@@ -1,0 +1,27 @@
+DATASETS:
+        SCORE: 'adjacency_matrix.pt'
+        SWITCH: 'switches_matrix.pt'
+        RUN_ID_TRAIN: (['subgraph_run_id_train.pt'])
+        FEATURE_TRAIN: (['features_train.pt'])
+        POSE_TRAIN: (['poses_train.pt'])
+        MASK_TRAIN: (['masks_train.pt'])
+        PAIR_TRAIN: 'paired_train.json'
+SOLVER:
+        EPOCH: 418
+        LR: 0.0001
+        BATCHSIZE: 256
+MODEL:
+        ATTENTION_GRAPH:
+                POSE_DIM: 2
+                FEATURE_DIM: 256
+                NUM_HEADS: 4
+                NUM_LAYERS: 5
+                INCLUDE_POSE: True
+                DROPOUT: 0.0
+TRAIN:
+        SAVE_INTERVAL: 100
+        WEIGHT: [1.0, 0.0]
+        HAS_VALIDATION: False
+        POS_RATE: 0.3
+DATA_DIR: ['../data/model_train/oxford/d200m/']
+SAVE_MODEL: True

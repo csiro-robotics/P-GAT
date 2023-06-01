@@ -1,0 +1,20 @@
+DATASETS:
+        FEATURE_TEST: (['features_train.pt', 'features_test.pt'])
+        POSE_TEST: (['poses_train.pt', 'poses_test.pt'])
+        MASK_TEST: (['masks_train.pt', 'masks_test.pt'])
+        SCORE: 'adjacency_matrix.pt'
+        RUN_ID_TEST: (['subgraph_run_id_train.pt', 'subgraph_run_id_test.pt'])
+        NODEINFO_TEST: (['subgraph_nodes_train.pt', 'subgraph_nodes_test.pt'])
+MODEL:
+        ATTENTION_GRAPH:
+                POSE_DIM: 2
+                FEATURE_DIM: 256
+                NUM_HEADS: 4
+                NUM_LAYERS: 9
+                INCLUDE_POSE: True
+                DROPOUT: 0.0
+TEST:
+        MODEL_PARAM: 'attentional_graph.pt'
+        STRIDE: 1
+DATA_DIR: ['../data/model_train/mulran/d200m/riverside/']
+OUTPUT_DIR: './'
