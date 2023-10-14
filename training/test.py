@@ -38,19 +38,19 @@ def calculate_recall_per_run(
         recall += candidates_ground_truth
     return recall / sorted_index.shape[0], recall[one_percent_threshold] / sorted_index.shape[0]
     
-def concat_train_test(matrix, query_range, train_range=None, test_range=None):
-    if train_range is not None and len(test_range) != 0:
-        test_matrix = matrix[query_range[0]: query_range[1], test_range[0]:test_range[1]]
-        train_matrix = matrix[query_range[0]: query_range[1], train_range[0]:train_range[1]]
-        return np.concatenate((train_matrix, test_matrix), axis=1)
-    elif len(test_range) != 0:
-        test_matrix = matrix[query_range[0]: query_range[1], test_range[0]:test_range[1]]
-        return test_matrix
-    elif train_range is not None:
-        train_matrix = matrix[query_range[0]: query_range[1], train_range[0]:train_range[1]]
-        return train_matrix
+def concat_database_query(matrix, query_range, database_range=None, query_range=None):
+    if database_range is not None and len(query_range) != 0:
+        query_matrix = matrix[query_range[0]: query_range[1], query_range[0]:query_range[1]]
+        database_matrix = matrix[query_range[0]: query_range[1], database_range[0]:database_range[1]]
+        return np.concatenate((database_matrix, query_matrix), axis=1)
+    elif len(query_range) != 0:
+        query_matrix = matrix[query_range[0]: query_range[1], query_range[0]:query_range[1]]
+        return query_matrix
+    elif database_range is not None:
+        database_matrix = matrix[query_range[0]: query_range[1], database_range[0]:database_range[1]]
+        return database_matrix
     else:
-        raise RuntimeError('The train_range and test_range should not be empty at same time.')
+        raise RuntimeError('The database_range and query_range should not be empty at same time.')
 
 
 def evaluate(
@@ -59,7 +59,7 @@ def evaluate(
     query_run,
     query_node,
     database_per_run,
-    has_train,
+    has_database,
 ):
     num_candidates = 25
     recall = np.zeros(num_candidates)
@@ -76,38 +76,38 @@ def evaluate(
                 query_node_idx[0, 0], 
                 query_node_idx[-1, 0] + query_node_idx[-1, 1]
             ]
-            if has_train:
-                train_range = database_per_run[database_run_id]['train_nodes_range']
-                test_range = database_per_run[database_run_id]['test_nodes_range']
+            if has_database:
+                database_range = database_per_run[database_run_id]['database_nodes_range']
+                query_range = database_per_run[database_run_id]['query_nodes_range']
                 recall_per_run, recall_one_percent_per_run = calculate_recall_per_run(
-                    concat_train_test(
+                    concat_database_query(
                         similarity_matrix, 
                         query_range, 
-                        train_range=train_range, 
-                        test_range=test_range
+                        database_range=database_range, 
+                        query_range=query_range
                     ),
-                    concat_train_test(
+                    concat_database_query(
                         ground_truth,
                         query_range, 
-                        train_range=train_range, 
-                        test_range=test_range
+                        database_range=database_range, 
+                        query_range=query_range
                     ),
                     num_candidates,
                 )
                 recall += recall_per_run
                 recall_one_percent += recall_one_percent_per_run
             else:
-                test_range = database_per_run[database_run_id]['test_nodes_range']
+                query_range = database_per_run[database_run_id]['query_nodes_range']
                 recall_per_run, recall_one_percent_per_run = calculate_recall_per_run(
-                    concat_train_test(
+                    concat_database_query(
                         similarity_matrix, 
                         query_range, 
-                        test_range=test_range
+                        query_range=query_range
                     ),
-                    concat_train_test(
+                    concat_database_query(
                         ground_truth,
                         query_range, 
-                        test_range=test_range
+                        query_range=query_range
                     ),
                     num_candidates,
                 )
@@ -141,15 +141,15 @@ def retrieve_info_per_run(dataset, run_idx, data_selector):
         'nodes_range': nodes_range,
     }
 
-def database_splitting(dataset, has_train):
+def database_splitting(dataset, has_database):
     '''
     Split the dataset by the run_id
 
     Input:
         dataset: dictionary
             The dataset produced by build.py
-        has_train: boolen
-            indicate if the dataset has training set for the evaluation
+        has_database: boolen
+            indicate if the dataset has database set for the evaluation
     Output:
         database_per_run: dictionary
             keys: run_id
@@ -159,46 +159,46 @@ def database_splitting(dataset, has_train):
     runs = torch.unique(torch.cat(dataset['run_id']))
     for run_idx in runs:
         run_idx = run_idx.item()
-        # select all the sub-graphs with the current run_idx from training dataset
-        if has_train:
-            train_per_run = retrieve_info_per_run(
+        # select all the sub-graphs with the current run_idx from database dataset
+        if has_database:
+            database_per_run = retrieve_info_per_run(
                 dataset, 
                 run_idx, 
                 data_selector=0,
             )
-            test_per_run = retrieve_info_per_run(
+            query_per_run = retrieve_info_per_run(
                 dataset, 
                 run_idx, 
                 data_selector=1,
             )
-            features = [train_per_run['features'], test_per_run['features']]
-            poses = [train_per_run['poses'], test_per_run['poses']]
-            masks = [train_per_run['masks'], test_per_run['masks']]
-            nodes_info = [train_per_run['nodes_info'], test_per_run['nodes_info']]
+            features = [database_per_run['features'], query_per_run['features']]
+            poses = [database_per_run['poses'], query_per_run['poses']]
+            masks = [database_per_run['masks'], query_per_run['masks']]
+            nodes_info = [database_per_run['nodes_info'], query_per_run['nodes_info']]
             sub_dataset = {
                 'feature': features,
                 'pose': poses,
                 'mask': masks,
                 'node_ids': nodes_info,
-                'train_nodes_range': train_per_run['nodes_range'],
-                'test_nodes_range': test_per_run['nodes_range'],
+                'database_nodes_range': database_per_run['nodes_range'],
+                'query_nodes_range': query_per_run['nodes_range'],
             }
         else:
-            test_per_run = retrieve_info_per_run(
+            query_per_run = retrieve_info_per_run(
                 dataset, 
                 run_idx, 
                 data_selector=0,
             )
-            features = [test_per_run['features']]
-            poses = [test_per_run['poses']]
-            masks = [test_per_run['masks']]
-            nodes_info = [test_per_run['nodes_info']]
+            features = [query_per_run['features']]
+            poses = [query_per_run['poses']]
+            masks = [query_per_run['masks']]
+            nodes_info = [query_per_run['nodes_info']]
             sub_dataset = {
                 'feature': features,
                 'pose': poses,
                 'mask': masks,
                 'node_ids': nodes_info,
-                'test_nodes_range': test_per_run['nodes_range'],
+                'query_nodes_range': query_per_run['nodes_range'],
             }
         database_per_run[run_idx] = sub_dataset
     return database_per_run
@@ -209,7 +209,7 @@ def main():
     # configuration
     # ---------------------------------------------------------------------------- #
     parser = argparse.ArgumentParser(
-        description='Train graph net embeddings using SuperGlue'
+        description='Evaluate the trained p-gat model'
     )
     parser.add_argument(
         "--config_file", 
@@ -245,7 +245,7 @@ def main():
         0, # dataset id
         is_train=False,
     )
-    has_train_dataset = len(normalized_test_data['features']) == 2
+    has_database_dataset = len(normalized_test_data['features']) == 2
     test_iteration = DataLoader(TensorDataset(
         normalized_test_data['features'][-1],
         normalized_test_data['poses'][-1],
@@ -255,7 +255,7 @@ def main():
     ), batch_size=1, shuffle=False)
     query_node = normalized_test_data['nodes_info'][-1]
     query_run = normalized_test_data['run_id'][-1]
-    database_per_run = database_splitting(normalized_test_data, has_train_dataset)
+    database_per_run = database_splitting(normalized_test_data, has_database_dataset)
 
     # ---------------------------------------------------------------------------- #
     # Model definition
@@ -286,10 +286,10 @@ def main():
         run_id = anchor_graph[4].item()
         for database_run_idx in database_per_run:
             if database_run_idx == run_id: continue
-            for train_test_indicator in range(2):
-                if not has_train_dataset and train_test_indicator == 1:
-                    # if the dataset only has test set, the maximum 
-                    # train_test_indicator is 0
+            for database_query_indicator in range(2):
+                if not has_database_dataset and database_query_indicator == 1:
+                    # if the dataset only has query set, the maximum 
+                    # database_query_indicator is 0
                     continue
                 query = {
                     'feature': anchor_graph[0], 
@@ -301,7 +301,7 @@ def main():
                     super_glue_model, 
                     query, 
                     database_per_run[database_run_idx],
-                    train_test_indicator,
+                    database_query_indicator,
                     similarity_scores_matrix,
                     device,
                 )
@@ -314,7 +314,7 @@ def main():
         query_node=query_node,
         query_run=query_run,
         database_per_run=database_per_run,
-        has_train=has_train_dataset,
+        has_database=has_database_dataset,
     )
     print(stat)
     with open(cfg.OUTPUT_DIR + 'evaluation_result.json', 'w') as result_file:

@@ -1,18 +1,18 @@
 DIR:
     # The path and filename of the database pickles
-    FEATURES_TRAIN: "../data/oxford/dataset_embeddings.pickle"
+    FEATURES_DATABASE: "../data/oxford/dataset_embeddings.pickle"
     # The path and filename of the query pickles
-    FEATURES_TEST: "../data/oxford/query_embeddings.pickle"
+    FEATURES_QUERY: "../data/oxford/query_embeddings.pickle"
     # The folder where the generated data saved
     SAVING: "../data/model_train/oxford/"
 PARAM:
     # The maximum travel distance within the subgraph
     DISTANCE_THRESHOLD: 200.0
     # Distance threshold for positive pairs in training
-    THRESH_TRAIN: 10.0
+    THRESH_DATABASE: 10.0
     # Distance threshold for negative pairs in training
-    NEG_THRESH_TRAIN: 50.0
+    NEG_THRESH_DATABASE: 50.0
     # Distance threshold for positive/negative pairs in testing
-    THRESH_TEST: 25.0
+    THRESH_QUERY: 25.0
     # If normalized the position of each nodes within subgraph
     POSE_NORMAL: True
