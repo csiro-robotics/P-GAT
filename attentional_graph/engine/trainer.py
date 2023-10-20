@@ -151,6 +151,8 @@ def do_train(
         
         features = features.to(device)
         poses = poses.to(device)
+        if torch.isnan(poses).max():
+            continue
         masks = masks.to(device)
         scores = scores.to(device)
         switches = switches.to(device)
