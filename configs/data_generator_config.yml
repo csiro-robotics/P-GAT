@@ -1,10 +1,12 @@
 DIR:
+    # The path and filename of the train pickles
+    FEATURES_TRAIN: "data/oxford/train_embeddings_flipped.pickle"
     # The path and filename of the database pickles
-    FEATURES_TRAIN: "../data/oxford/dataset_embeddings.pickle"
+    FEATURES_DATABASE: "data/oxford/dataset_embeddings.pickle"
     # The path and filename of the query pickles
-    FEATURES_TEST: "../data/oxford/query_embeddings.pickle"
+    FEATURES_QUERY: "data/oxford/query_embeddings.pickle"
     # The folder where the generated data saved
-    SAVING: "../data/model_train/oxford/"
+    SAVING: "data/model_train/oxford/d200/"
 PARAM:
     # The maximum travel distance within the subgraph
     DISTANCE_THRESHOLD: 200.0
@@ -16,3 +18,5 @@ PARAM:
     THRESH_TEST: 25.0
     # If normalized the position of each nodes within subgraph
     POSE_NORMAL: True
+    # If generate dataset for training
+    GENERATE_TRAIN: True

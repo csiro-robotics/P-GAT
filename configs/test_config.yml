@@ -1,10 +1,10 @@
 DATASETS:
-        FEATURE_TEST: (['features_train.pt', 'features_test.pt'])
-        POSE_TEST: (['poses_train.pt', 'poses_test.pt'])
-        MASK_TEST: (['masks_train.pt', 'masks_test.pt'])
-        SCORE: 'adjacency_matrix.pt'
-        RUN_ID_TEST: (['subgraph_run_id_train.pt', 'subgraph_run_id_test.pt'])
-        NODEINFO_TEST: (['subgraph_nodes_train.pt', 'subgraph_nodes_test.pt'])
+        FEATURE_TEST: (['features_database.pt', 'features_query.pt'])
+        POSE_TEST: (['poses_database.pt', 'poses_query.pt'])
+        MASK_TEST: (['masks_database.pt', 'masks_query.pt'])
+        SCORE: 'adjacency_matrix_eval.pt'
+        RUN_ID_TEST: (['subgraph_run_id_database.pt', 'subgraph_run_id_query.pt'])
+        NODEINFO_TEST: (['subgraph_nodes_database.pt', 'subgraph_nodes_query.pt'])
 MODEL:
         ATTENTION_GRAPH:
                 POSE_DIM: 2
@@ -16,5 +16,5 @@ MODEL:
 TEST:
         MODEL_PARAM: 'attentional_graph.pt'
         STRIDE: 1
-DATA_DIR: ['../data/model_train/mulran/d200m/riverside/']
+DATA_DIR: ['data/model_train/oxford/d200/']
 OUTPUT_DIR: './'

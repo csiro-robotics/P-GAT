@@ -73,14 +73,16 @@ def default_config():
 
     cfg.DIR = CN()
     # feature data directory
-    cfg.DIR.FEATURES_TRAIN = "../data/oxford/dataset_embeddings.pickle"
+    cfg.DIR.FEATURES_TRAIN = "../data/oxford/train_embeddings.pickle"
+    cfg.DIR.FEATURES_DATABASE = "../data/oxford/dataset_embeddings.pickle"
     # pose data directory
-    cfg.DIR.FEATURES_TEST= "../data/oxford/query_embeddings.pickle"
+    cfg.DIR.FEATURES_QUERY= "../data/oxford/query_embeddings.pickle"
     # data saving directory
     cfg.DIR.SAVING = "../data/model_train/oxford/"
     
     cfg.PARAM = CN()
     # 
+    cfg.PARAM.GENERATE_TRAIN = True
     cfg.PARAM.DISTANCE_THRESHOLD = 50.0
     cfg.PARAM.THRESH_TRAIN = 10.0
     cfg.PARAM.NEG_THRESH_TRAIN = 50.0
@@ -105,7 +107,7 @@ def merge_runs(data, start_idx=0):
     Input:
         data: list
     Output:
-        merged_data: dictionary
+        merged_database: dictionary
             'features': [total_number_poses, 1, features_dim]
             'poses': [total_number_poses, poses_dim]
         idx_per_runs: dictionary
@@ -121,9 +123,9 @@ def merge_runs(data, start_idx=0):
         number_nodes = data[run_idx][0].shape[0]
         idx_per_runs[run_idx] = [start_idx, start_idx + number_nodes - 1]
         start_idx = start_idx + number_nodes
-    merged_data = {'features':np.concatenate(features),
+    merged_database = {'features':np.concatenate(features),
         'poses': np.concatenate(poses)}
-    return merged_data, idx_per_runs
+    return merged_database, idx_per_runs
 
 def segmentation(
         graph, 
@@ -345,80 +347,110 @@ if __name__ == "__main__":
     print("----------------------------------------------------------------------")
 
     # Read the feature and position information for each scan
-    data_train = load_pickle(cfg.DIR.FEATURES_TRAIN)
-    data_test = load_pickle(cfg.DIR.FEATURES_TEST)
-    total_runs = max(len(data_train), len(data_test))
+    if cfg.PARAM.GENERATE_TRAIN:
+        data_base = load_pickle(cfg.DIR.FEATURES_TRAIN)
+        total_runs = len(data_base)
+    else:
+        data_base = load_pickle(cfg.DIR.FEATURES_DATABASE)
+        data_query = load_pickle(cfg.DIR.FEATURES_QUERY)
+        total_runs = max(len(data_base), len(data_query))
 
     # Merge the dataset in different runs into a numpy array
-    merged_train, idx_per_runs_train = merge_runs(data_train)
-    merged_test, idx_per_runs_test = merge_runs(
-        data_test, 
-        start_idx=merged_train['features'].shape[0], # follow the last node in train set
-    )
-    total_num_nodes = merged_train['features'].shape[0] + merged_test['features'].shape[0]
+    merged_database, idx_per_runs_train = merge_runs(data_base)
+    total_num_nodes = merged_database['features'].shape[0]
+    if not cfg.PARAM.GENERATE_TRAIN:
+        merged_test, idx_per_runs_test = merge_runs(
+            data_query, 
+            start_idx=merged_database['features'].shape[0], # follow the last node in train set
+        )
+        total_num_nodes = total_num_nodes + merged_test['features'].shape[0]
     rep_graph = GraphMaker(total_num_nodes=total_num_nodes)
     print('Creating a graph with training dataset')
     rep_graph.build_graph(
-        np.expand_dims(merged_train['features'], 1), 
-        merged_train['poses'],
+        np.expand_dims(merged_database['features'], 1), 
+        merged_database['poses'],
         threshold=cfg.PARAM.THRESH_TRAIN,
         neg_threshold=cfg.PARAM.NEG_THRESH_TRAIN)
-    print('Adding nodes into the graph with testing dataset')
-    rep_graph.build_graph(
-        np.expand_dims(merged_test['features'], 1), 
-        merged_test['poses'],
-        threshold=cfg.PARAM.THRESH_TEST)
+    if not cfg.PARAM.GENERATE_TRAIN:
+        print('Adding nodes into the graph with testing dataset')
+        rep_graph.build_graph(
+            np.expand_dims(merged_test['features'], 1), 
+            merged_test['poses'],
+            threshold=cfg.PARAM.THRESH_TEST)
     print('Graph has %d nodes.' % rep_graph.graph.number_of_nodes())
     print('Graph has %d edges.' % rep_graph.graph.number_of_edges())
 
-    segmented_data_train, paired_data_train = generate_dataset(
+    segmented_data_base, paired_data_base = generate_dataset(
         rep_graph,
         idx_per_runs_train,
         is_train=True,
         pose_normalize=cfg.PARAM.POSE_NORMAL,
         descriptor_normalize=cfg.PARAM.DESCRIPTOR_NORMAL,
     )
-    segmented_data_test = generate_dataset(
-        rep_graph,
-        idx_per_runs_test,
-        is_train=False,
-        pose_normalize=cfg.PARAM.POSE_NORMAL,
-        descriptor_normalize=cfg.PARAM.DESCRIPTOR_NORMAL,
-    )
+    if not cfg.PARAM.GENERATE_TRAIN:
+        segmented_data_query = generate_dataset(
+            rep_graph,
+            idx_per_runs_test,
+            is_train=False,
+            pose_normalize=cfg.PARAM.POSE_NORMAL,
+            descriptor_normalize=cfg.PARAM.DESCRIPTOR_NORMAL,
+        )
 
-    # Save representation graph
-    dgl.save_graphs(cfg.DIR.SAVING + "rep_graph.bin",
-        rep_graph.graph)
-    # Save adjacency matrix
-    torch.save(rep_graph.adjacency_matrix,
-        cfg.DIR.SAVING + "adjacency_matrix.pt")
-    # Save switches matrix
-    torch.save(rep_graph.weight_matrix,
-        cfg.DIR.SAVING + "switches_matrix.pt")
-    # Save training material 
-    torch.save(segmented_data_train['features'], 
-        cfg.DIR.SAVING + "features_train.pt")
-    torch.save(segmented_data_train['poses'], 
-        cfg.DIR.SAVING + "poses_train.pt")
-    torch.save(segmented_data_train['masks'], 
-        cfg.DIR.SAVING + "masks_train.pt")
-    torch.save(segmented_data_train['subgraph_run_id'], 
-        cfg.DIR.SAVING + "subgraph_run_id_train.pt")
-    torch.save(segmented_data_train['subgraph_nodes'], 
-        cfg.DIR.SAVING + "subgraph_nodes_train.pt")
-    with open(cfg.DIR.SAVING + 'paired_train.json', 'w') as paired_file:
-        json.dump(paired_data_train, paired_file)
-    # Save testing material  
-    torch.save(segmented_data_test['features'], 
-        cfg.DIR.SAVING + "features_test.pt")
-    torch.save(segmented_data_test['poses'], 
-        cfg.DIR.SAVING + "poses_test.pt")
-    torch.save(segmented_data_test['masks'], 
-        cfg.DIR.SAVING + "masks_test.pt")
-    torch.save(segmented_data_test['subgraph_run_id'], 
-        cfg.DIR.SAVING + "subgraph_run_id_test.pt")
-    torch.save(segmented_data_test['subgraph_nodes'], 
-        cfg.DIR.SAVING + "subgraph_nodes_test.pt")
+    if cfg.PARAM.GENERATE_TRAIN:
+        # Save representation graph
+        # dgl.save_graphs(cfg.DIR.SAVING + "rep_graph.bin",
+        #     rep_graph.graph)
+        # Save adjacency matrix
+        torch.save(rep_graph.adjacency_matrix,
+            cfg.DIR.SAVING + "adjacency_matrix_train.pt")
+        # Save switches matrix
+        torch.save(rep_graph.weight_matrix,
+            cfg.DIR.SAVING + "switches_matrix_train.pt")
+        # Save training material 
+        torch.save(segmented_data_base['features'], 
+            cfg.DIR.SAVING + "features_train.pt")
+        torch.save(segmented_data_base['poses'], 
+            cfg.DIR.SAVING + "poses_train.pt")
+        torch.save(segmented_data_base['masks'], 
+            cfg.DIR.SAVING + "masks_train.pt")
+        torch.save(segmented_data_base['subgraph_run_id'], 
+            cfg.DIR.SAVING + "subgraph_run_id_train.pt")
+        torch.save(segmented_data_base['subgraph_nodes'], 
+            cfg.DIR.SAVING + "subgraph_nodes_train.pt")
+        with open(cfg.DIR.SAVING + 'paired_train.json', 'w') as paired_file:
+            json.dump(paired_data_base, paired_file)
+    else:
+        # Save representation graph
+        # dgl.save_graphs(cfg.DIR.SAVING + "rep_graph.bin",
+        #     rep_graph.graph)
+        # Save adjacency matrix
+        torch.save(rep_graph.adjacency_matrix,
+            cfg.DIR.SAVING + "adjacency_matrix_eval.pt")
+        # Save switches matrix
+        torch.save(rep_graph.weight_matrix,
+            cfg.DIR.SAVING + "switches_matrix_eval.pt")
+        # Save training material 
+        torch.save(segmented_data_base['features'], 
+            cfg.DIR.SAVING + "features_database.pt")
+        torch.save(segmented_data_base['poses'], 
+            cfg.DIR.SAVING + "poses_database.pt")
+        torch.save(segmented_data_base['masks'], 
+            cfg.DIR.SAVING + "masks_database.pt")
+        torch.save(segmented_data_base['subgraph_run_id'], 
+            cfg.DIR.SAVING + "subgraph_run_id_database.pt")
+        torch.save(segmented_data_base['subgraph_nodes'], 
+            cfg.DIR.SAVING + "subgraph_nodes_database.pt")     
+                # Save testing material  
+        torch.save(segmented_data_query['features'], 
+            cfg.DIR.SAVING + "features_query.pt")
+        torch.save(segmented_data_query['poses'], 
+            cfg.DIR.SAVING + "poses_query.pt")
+        torch.save(segmented_data_query['masks'], 
+            cfg.DIR.SAVING + "masks_query.pt")
+        torch.save(segmented_data_query['subgraph_run_id'], 
+            cfg.DIR.SAVING + "subgraph_run_id_query.pt")
+        torch.save(segmented_data_query['subgraph_nodes'], 
+            cfg.DIR.SAVING + "subgraph_nodes_query.pt")
 
     print("----------------------------Data Generation---------------------------")
     print("Features, nodes and adjacency matrix have successfully been generated.")

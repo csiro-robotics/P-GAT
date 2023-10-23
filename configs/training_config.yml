@@ -1,6 +1,6 @@
 DATASETS:
-        SCORE: 'adjacency_matrix.pt'
-        SWITCH: 'switches_matrix.pt'
+        SCORE: 'adjacency_matrix_train.pt'
+        SWITCH: 'switches_matrix_train.pt'
         RUN_ID_TRAIN: (['subgraph_run_id_train.pt'])
         FEATURE_TRAIN: (['features_train.pt'])
         POSE_TRAIN: (['poses_train.pt'])
@@ -23,5 +23,5 @@ TRAIN:
         WEIGHT: [1.0, 0.0]
         HAS_VALIDATION: False
         POS_RATE: 0.3
-DATA_DIR: ['../data/model_train/oxford/d200m/']
+DATA_DIR: ['data/model_train/oxford/d200/']
 SAVE_MODEL: True
