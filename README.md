@@ -53,7 +53,7 @@ optional arguments:
   -h, --help          show this help message and exit
   --config_file FILE  path to config file
 ```
-The arguments required by the script is maintained by the YAML configuration files. The example of the config file is `configs/data_generator_config.yml`, and an example of usage command is:
+The arguments required by the script is maintained by the YAML configuration files. An example of the config file is `configs/data_generator_config.yml`, and an example of usage command is:
 ```
 python dataset_generator_oxford.py --config <path-to-config>/data_generator_config.yml
 ```
@@ -61,11 +61,11 @@ python dataset_generator_oxford.py --config <path-to-config>/data_generator_conf
 ## Model training
 We use `training/train.py` to train the model. 
 
-The default configuration is in the `attentional_graph/config/defaults.py`.
+The default configuration is in the `attentional_graph/config_init/defaults.py`.
 The customised configuration is applied via configuration files in format of YAML. 
-The example of config file in YAML can be found in `configs/training_config.yml`.
+An example of config file in YAML can be found in `configs/training_config.yml`.
 
-The example of training command is:
+An example of training command is:
 ```
 python training/train.py --config <path-to-config>/training_config.yml
 ```
@@ -90,7 +90,7 @@ Same as the training, the default configuration is in the `attentional_graph/con
 and the customised configuration is applied via configuration files in format of YAML. 
 The example of config file in YAML can be found in `configs/test_config.yml`.
 
-The example of testing command is:
+An example of testing command is:
 ```
 cp <pre-trained-model.pt> .
 python training/test.py --config <path-to-config>/test_config.yml
