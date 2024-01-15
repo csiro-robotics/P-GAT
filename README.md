@@ -35,11 +35,11 @@ For the training and evaluation, P-GAT uses three datasets:
 - In-house dataset
 - MulRan dataset
 
-We follow MinkLoc3D ([link](https://github.com/jac99/MinkLoc3D)) to generate the descriptors for point clouds and save them in pickles. Oxford dataset can be downloaded from the PoinNetVLAD repository ([link](https://github.com/mikacuy/pointnetvlad)). MulRan dataset can be downloaded from ([link](https://sites.google.com/view/mulran-pr/dataset)). As an example, pickles generated for Oxford (based on MinkLoc3D) can be downloaded from ([link](https://www.dropbox.com/home/P-GAT/oxford_pickles)) (Note: Generating the dataset for Oxford may require up to one day.)
+We follow MinkLoc3D ([link](https://github.com/jac99/MinkLoc3D)) to generate the descriptors for point clouds and save them in pickles. Oxford dataset can be downloaded from the PoinNetVLAD repository ([link](https://github.com/mikacuy/pointnetvlad)). MulRan dataset can be downloaded from ([link](https://sites.google.com/view/mulran-pr/dataset)). As an example, pickles generated for Oxford (based on MinkLoc3D) can be downloaded from ([link](https://www.dropbox.com/home/P-GAT/oxford_pickles)) (Note: Dataset preparation for Oxford may require up to one day. For conveninece, the elements needed for evaluation on Oxford can be downloaded here ([link](https://www.dropbox.com/home/P-GAT/oxford_eval)))
 
-We use `datasets/dataset_generator_oxford.py` to generate the oxford and in-house dataset for training and testing, `datasets/dataset_generator_mulran.py` to generate DCC and riverside sub-datasets in MulRan dataset, and `datasets/dataset_generator_kaist.py` to generate KAIST sub-dataset in MulRan. 
+We use `datasets/dataset_generator_oxford.py` to process the Oxford and in-house dataset for training and testing, `datasets/dataset_generator_mulran.py` to process DCC and riverside sub-datasets in MulRan dataset, and `datasets/dataset_generator_kaist.py` to process KAIST sub-dataset in MulRan. 
 
-A global graph and sub-graphs are generated inside the scripts.
+A global graph and sub-graphs are generated inside the scripts. Note: The global graph and its corresponding adjacency matrix are exclusively used for training purposes.
 The usage of the scripts is:
 ```
 usage: dataset_generator.py [-h] [--config_file FILE] ...
