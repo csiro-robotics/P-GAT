@@ -35,11 +35,11 @@ For the training and evaluation, P-GAT uses three datasets:
 - In-house dataset
 - MulRan dataset
 
-We follow MinkLoc3D ([link](https://github.com/jac99/MinkLoc3D)) to generate the descriptors for point clouds and save them in pickles. Oxford dataset can be downloaded from the PoinNetVLAD repository ([link](https://github.com/mikacuy/pointnetvlad)). MulRan dataset can be downloaded from ([link](https://sites.google.com/view/mulran-pr/dataset)).
+We follow MinkLoc3D ([link](https://github.com/jac99/MinkLoc3D)) to generate the descriptors for point clouds and save them in pickles. Oxford dataset can be downloaded from the PoinNetVLAD repository ([link](https://github.com/mikacuy/pointnetvlad)). MulRan dataset can be downloaded from ([link](https://sites.google.com/view/mulran-pr/dataset)). As an example, pickles generated for Oxford can be downloaded from ([link](https://www.dropbox.com/home/P-GAT/oxford_pickles))
 
 We use `datasets/dataset_generator_oxford.py` to generate the oxford and in-house dataset for training and testing, `datasets/dataset_generator_mulran.py` to generate DCC and riverside sub-datasets in MulRan dataset, and `datasets/dataset_generator_kaist.py` to generate KAIST sub-dataset in MulRan. 
 
-A global raph and sub-graphs are generated inside the scripts.
+A global graph and sub-graphs are generated inside the scripts.
 The usage of the scripts is:
 ```
 usage: dataset_generator.py [-h] [--config_file FILE] ...
@@ -53,7 +53,7 @@ optional arguments:
   -h, --help          show this help message and exit
   --config_file FILE  path to config file
 ```
-The arguments required by the script is maintained by the YAML configuration files. The example of the config file is `configs/data_generator_config.yml`, and an example of usage command is
+The arguments required by the script is maintained by the YAML configuration files. The example of the config file is `configs/data_generator_config.yml`, and an example of usage command is:
 ```
 python dataset_generator_oxford.py --config <path-to-config>/data_generator_config.yml
 ```
@@ -93,7 +93,7 @@ The example of config file in YAML can be found in `configs/test_config.yml`.
 The example of testing command is:
 ```
 cp <pre-trained-model.pt> .
-python testing/test.py --config <path-to-config>/test_config.yml
+python training/test.py --config <path-to-config>/test_config.yml
 ```
 ## Acknowledgement
 P-GAT has been developed based on the publically available lidar place recongition approaches including MinkLoc3D ([link](https://github.com/jac99/MinkLoc3D)), PointNet-VLAD ([link](https://github.com/mikacuy/pointnetvlad)) and PPT-Net([link](https://github.com/fpthink/PPT-Net)).
