@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Copyright (c) 2023, The Software is copyright (c) Commonwealth Scientific and Industrial Research Organisation (CSIRO) ABN 41 687 119 230.
-All rights reserved. CSIRO is willing to grant you a licence to this software (FactoFormer) on the following terms, except where otherwise indicated for third party material.
+Copyright (c) 2024, The Software is copyright (c) Commonwealth Scientific and Industrial Research Organisation (CSIRO) ABN 41 687 119 230.
+All rights reserved. CSIRO is willing to grant you a licence to this software (P-GAT) on the following terms, except where otherwise indicated for third party material.
 
 CSIRO hereby grants you a non-exclusive, non-transferable, free of charge right to copy, modify, merge, publish, distribute, 
 and sublicense the Software for the sole purpose of performing non-commercial scientific research, non-commercial education,
@@ -48,22 +48,22 @@ Pandas https://pandas.pydata.org/
 This software is licensed under a BSD-3-Clause license.
 ___________________________________________________________________
 ___________________________________________________________________
-Pandas https://www.dgl.ai/
+DGL https://www.dgl.ai/
 
 This software is licensed under an Apache-2.0 license.
 ___________________________________________________________________
 ___________________________________________________________________
-Pandas https://www.tensorflow.org/tensorboard
+Tensorflow https://www.tensorflow.org/tensorboard
 
 This software is licensed under an Apache-2.0 license.
 ___________________________________________________________________
 ___________________________________________________________________
-Pandas https://tqdm.github.io/
+Tqdm https://tqdm.github.io/
 
 This software is licensed under the MIT licence license.
 ___________________________________________________________________
 ___________________________________________________________________
-Pandas https://matplotlib.org/
+Matplotlib https://matplotlib.org/
 
 This software license is based on the PSF license.
 ___________________________________________________________________
