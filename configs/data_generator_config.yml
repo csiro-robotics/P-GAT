@@ -1,6 +1,6 @@
 DIR:
     # The path and filename of the train pickles
-    FEATURES_TRAIN: "data/oxford/train_embeddings_flipped.pickle"
+    FEATURES_TRAIN: "data/oxford/train_embeddings.pickle"
     # The path and filename of the database pickles
     FEATURES_DATABASE: "data/oxford/dataset_embeddings.pickle"
     # The path and filename of the query pickles
