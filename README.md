@@ -35,7 +35,7 @@ For the training and evaluation, P-GAT uses three datasets:
 - In-house dataset
 - MulRan dataset
 
-We follow MinkLoc3D ([link](https://github.com/jac99/MinkLoc3D)) to generate the descriptors for point clouds and save them in pickles. Oxford dataset can be downloaded from the PoinNetVLAD repository ([link](https://github.com/mikacuy/pointnetvlad)). MulRan dataset can be downloaded from ([link](https://sites.google.com/view/mulran-pr/dataset)). As an example, pickles generated for Oxford can be downloaded from ([link](https://www.dropbox.com/home/P-GAT/oxford_pickles))
+We follow MinkLoc3D ([link](https://github.com/jac99/MinkLoc3D)) to generate the descriptors for point clouds and save them in pickles. Oxford dataset can be downloaded from the PoinNetVLAD repository ([link](https://github.com/mikacuy/pointnetvlad)). MulRan dataset can be downloaded from ([link](https://sites.google.com/view/mulran-pr/dataset)). As an example, pickles generated for Oxford (based on MinkLoc3D) can be downloaded from ([link](https://www.dropbox.com/home/P-GAT/oxford_pickles)) (Note: Dataset generation for Oxford can take upto 1 day!)
 
 We use `datasets/dataset_generator_oxford.py` to generate the oxford and in-house dataset for training and testing, `datasets/dataset_generator_mulran.py` to generate DCC and riverside sub-datasets in MulRan dataset, and `datasets/dataset_generator_kaist.py` to generate KAIST sub-dataset in MulRan. 
 
