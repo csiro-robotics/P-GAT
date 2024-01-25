@@ -35,7 +35,7 @@ For the training and evaluation, P-GAT uses three datasets:
 - In-house dataset
 - MulRan dataset
 
-We follow MinkLoc3D ([link](https://github.com/jac99/MinkLoc3D)) to generate the descriptors for point clouds and save them in pickles. Oxford dataset can be downloaded from the PoinNetVLAD repository ([link](https://github.com/mikacuy/pointnetvlad)). MulRan dataset can be downloaded from ([link](https://sites.google.com/view/mulran-pr/dataset)). As an example, pickles generated for Oxford (based on MinkLoc3D) can be downloaded from ([link](https://www.dropbox.com/home/P-GAT/oxford_pickles)) (Note: Dataset preparation for Oxford may require up to one day. For conveninece, the elements needed for evaluation on Oxford can be downloaded here ([link](https://www.dropbox.com/home/P-GAT/oxford_eval)))
+We follow MinkLoc3D ([link](https://github.com/jac99/MinkLoc3D)) to generate the descriptors for point clouds and save them in pickles. Oxford dataset can be downloaded from the PoinNetVLAD repository ([link](https://github.com/mikacuy/pointnetvlad)). MulRan dataset can be downloaded from ([link](https://sites.google.com/view/mulran-pr/dataset)). As an example, pickles generated for Oxford (based on MinkLoc3D) can be downloaded from ([link](https://www.dropbox.com/scl/fo/4s9ab3cfcwwfp0rfrfaja/h?rlkey=zlmv4zdwzvrjrgt5gk10x8445&dl=0)) (Note: Dataset preparation for Oxford may require up to one day. For conveninece, the elements needed for evaluation on Oxford can be downloaded here ([link](https://www.dropbox.com/scl/fo/x8y6m6kmoprkg15na7m37/h?rlkey=b03k6bw76834rxg158omfie1r&dl=0)))
 
 We use `datasets/dataset_generator_oxford.py` to process the Oxford and in-house dataset for training and testing, `datasets/dataset_generator_mulran.py` to process DCC and riverside sub-datasets in MulRan dataset, and `datasets/dataset_generator_kaist.py` to process KAIST sub-dataset in MulRan. 
 
@@ -75,12 +75,12 @@ Checkpoints listed below are the P-GAT models trained based on the descriptors g
 
 | Model      | Checkpoint | Pre-trained on |
 | ----------- | ----------- | ----------- |
-| PointNetVLAD      | Checkpoint([link](https://www.dropbox.com/home/P-GAT/models?preview=pgat_pointnetvlad_oxford.pt))       | Oxford |
-| MinkLoc3D   | Checkpoint ([link](https://www.dropbox.com/home/P-GAT/models?preview=pgat_minkloc3d_oxford.pt))       | Oxford |
-| PPT-Net   | Checkpoint([link](https://www.dropbox.com/home/P-GAT/models?preview=pgat_pptnet_oxford.pt))        | Oxford |
-| PointNetVLAD   | Checkpoint([link](https://www.dropbox.com/home/P-GAT/models?preview=pgat_pointnetvlad_mulran.pt))        | MulRan |
-| MinkLoc3D   | Checkpoint([link](https://www.dropbox.com/home/P-GAT/models?preview=pgat_minkloc3d_mulran.pt))        | MulRan |
-| PPTNet   | Checkpoint([link](https://www.dropbox.com/home/P-GAT/models?preview=pgat_pptnet_mulran.pt))        | MulRan |
+| PointNetVLAD      | Checkpoint([link](https://www.dropbox.com/scl/fi/u85vdn2q7aazt2v268xv3/pgat_pointnetvlad_oxford.pt?rlkey=lb2gkikq7o9xfsu3n4l904lx5&dl=0))       | Oxford |
+| MinkLoc3D   | Checkpoint ([link](https://www.dropbox.com/scl/fi/t020sapjw6uj1rayqt6qo/pgat_minkloc3d_oxford.pt?rlkey=ne53zozhqas147zki412ku2zz&dl=0))       | Oxford |
+| PPT-Net   | Checkpoint([link](https://www.dropbox.com/scl/fi/720233z6u3eywt6baxuur/pgat_pptnet_oxford.pt?rlkey=a2j631gxnu9vmhtble6xyijb3&dl=0))        | Oxford |
+| PointNetVLAD   | Checkpoint([link](https://www.dropbox.com/scl/fi/ma2zb0vaooqih98kygvz8/pgat_pointnetvlad_mulran.pt?rlkey=cx0zuaolhfwgfxfp887qa7f25&dl=0))        | MulRan |
+| MinkLoc3D   | Checkpoint([link](https://www.dropbox.com/scl/fi/8b4wnvp9ei8z1160utp65/pgat_minkloc3d_mulran.pt?rlkey=kxl40o35t4vqb3e9ll0dcc5te&dl=0))        | MulRan |
+| PPTNet   | Checkpoint([link](https://www.dropbox.com/scl/fi/e2qfcpj9aeq7rt09s7gts/pgat_pptnet_mulran.pt?rlkey=px4dbeyinc8wfsuzbx2svw1wr&dl=0))        | MulRan |
 
 
 ## Model evaluation
